@@ -11,4 +11,3 @@
       kubernetes.core.k8s:
         state: present
         src: "{{ manifest_path }}"
-  
