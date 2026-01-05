@@ -1,0 +1,110 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aap-deploy
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index
+  namespace: aap-deploy
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>Ansible Automation Platform Webinar</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f6f8;
+          text-align: center;
+          padding-top: 80px;
+        }
+        h1 {
+          color: #c00;
+        }
+        p {
+          font-size: 18px;
+          color: #333;
+          max-width: 900px;
+          margin: auto;
+        }
+        footer {
+          margin-top: 50px;
+          color: #666;
+          font-size: 14px;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Welcome to our Webinar</h1>
+
+      <p>
+        <strong>Operate and Manage Automation with Ansible Automation Platform</strong><br><br>
+        This webinar focuses on running automation at scale across large and complex infrastructures.
+        You will discover how Ansible Automation Platform enables:
+      </p>
+
+      <p>
+        • Centralized automation governance<br>
+        • Secure credential and inventory management<br>
+        • Scalable execution with execution environments<br>
+        • Integration with CI/CD and cloud-native platforms<br>
+        • Day-2 operations and lifecycle management
+      </p>
+
+      <p>
+        Whether you are operating hybrid, on-premise, or cloud infrastructures,
+        Ansible Automation Platform provides a consistent and enterprise-ready automation experience.
+      </p>
+
+      <footer>
+        Powered by Ansible Automation Platform
+      </footer>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: aap-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: web-content
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+      volumes:
+        - name: web-content
+          configMap:
+            name: nginx-index
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: aap-deploy
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
