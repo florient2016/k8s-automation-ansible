@@ -4,12 +4,12 @@
   gather_facts: false
 
   vars:
-    namespace: demo-app
+    namespace: aap-deploy
     app_name: nginx
     ingress_class: nginx
 
     # Change this to your real DNS name that points to your ingress controller entrypoint
-    host_fqdn: demo.example.com
+    host_fqdn: demo.itssolutions.me
 
     # cert-manager ClusterIssuer already created in your cluster (example: letsencrypt-prod)
     cluster_issuer: letsencrypt-prod
@@ -145,9 +145,9 @@
             metadata:
               name: "{{ app_name }}-ingress"
               namespace: "{{ namespace }}"
-              annotations:
+              #annotations:
                 # cert-manager will watch this and create a Certificate for the tls_secret_name
-                cert-manager.io/cluster-issuer: "{{ cluster_issuer }}"
+                #cert-manager.io/cluster-issuer: "{{ cluster_issuer }}"
             spec:
               ingressClassName: "{{ ingress_class }}"
               tls:
