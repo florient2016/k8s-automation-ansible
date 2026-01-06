@@ -314,7 +314,7 @@
         # kubectl -n "{{ namespace }}" port-forward svc/nginx 8080:
     - name: kubectl port-forward
       ansible.builtin.command: >
-        kubectl -n "{{ namespace }}" port-forward svc/nginx 8086:80
+        kubectl -n "{{ namespace }}" port-forward svc/nginx 8087:80
       register: port_forward_result
 
     - name: Display port-forward result
