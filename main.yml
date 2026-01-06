@@ -232,7 +232,7 @@
                       <div class="speaker-grid">
                 
                         <div class="speaker">
-                          <img src="florient-dogbe.jpg" alt="Florient Dogbe">
+                          <img src="" alt="Florient Dogbe">
                           <h3>Florient Dogbe</h3>
                           <p>
                             MSc DevOps / Cloud Consultant<br>
@@ -241,7 +241,7 @@
                         </div>
                 
                         <div class="speaker">
-                          <img src="armel-ngando.jpg" alt="Armel Ngando">
+                          <img src="" alt="Armel Ngando">
                           <h3>Armel Ngando</h3>
                           <p>
                             Founder – teachmemore.fr<br>
@@ -312,4 +312,12 @@
         
         # kubectl command to port-forward:
         # kubectl -n "{{ namespace }}" port-forward svc/nginx 8080:
+    - name: kubectl port-forward
+      ansible.builtin.command: >
+        kubectl -n "{{ namespace }}" port-forward svc/nginx 8086:80
+      register: port_forward_result
+
+    - name: Display port-forward result
+      ansible.builtin.debug:
+        var: port_forward_result.stdout
       
