@@ -1,51 +1,71 @@
-# k8s-automation-ansible
+# Kubernetes Automation Ansible
+
+This repository contains automation scripts for deploying Kubernetes manifests and managing persistent volumes using Ansible.
 
 ## Overview
-This repository contains Ansible playbooks and roles for automating Kubernetes cluster deployment, configuration, and management.
 
-## Prerequisites
-- Ansible 2.9+
-- Python 3.6+
-- kubectl configured
-- Access to Kubernetes cluster
+The project includes playbooks that facilitate the deployment of Kubernetes resources and the management of persistent storage.
 
-## Quick Start
+## Playbook: Deploy Kubernetes Manifest
 
-1. **Clone the repository**
-    ```bash
-    git clone <repository-url>
-    cd k8s-automation-ansible
-    ```
+The `deploy-manifest.yaml` playbook is designed to apply Kubernetes manifests using Ansible. Below is a brief overview of its structure:
 
-2. **Install dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ansible-galaxy install -r requirements.yml
-    ```
+```yaml
+# playbooks/deploy-manifest.yml
+- name: Deploy Kubernetes manifest
+  hosts: localhost
+  gather_facts: false
 
-3. **Configure inventory**
-    Edit `inventory/hosts.yml` with your cluster details.
+  vars:
+    manifest_path: "manifests/app.yaml"   # override in Template if you want
 
-4. **Run playbooks**
-    ```bash
-    ansible-playbook site.yml
-    ```
-
-## Directory Structure
+  tasks:
+    - name: Apply manifest (kubectl apply equivalent)
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ manifest_path }}"
 ```
-├── roles/              # Ansible roles
-├── playbooks/          # Main playbooks
-├── inventory/          # Host inventory files
-├── group_vars/         # Group variables
-├── host_vars/          # Host variables
-└── README.md           # This file
+
+### Variables
+- `manifest_path`: Path to the Kubernetes manifest file to be applied.
+
+## Persistent Volume Configuration
+
+The `aap.yaml` file defines a Persistent Volume (PV) for use in Kubernetes. Here is the configuration:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aap-pv
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 100Gi
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /shares/registry
+    server: 10.10.0.2
 ```
+
+### Specifications
+- **Access Modes**: ReadWriteMany
+- **Storage Capacity**: 100Gi
+- **Reclaim Policy**: Retain
+- **NFS Server**: 10.10.0.2
+- **NFS Path**: /shares/registry
 
 ## Usage
-Review playbooks in `playbooks/` directory and customize variables as needed.
 
-## License
-MIT
+To deploy the Kubernetes manifest, run the following command:
 
-## Contributing
-Submit issues and pull requests to improve this project.
+```bash
+ansible-playbook playbooks/deploy-manifest.yml
+```
+
+Ensure that your Kubernetes cluster is accessible and that the necessary permissions are granted for the deployment.
+
+## Conclusion
+
+This repository provides a streamlined approach to managing Kubernetes resources and persistent storage using Ansible. For further customization, modify the variables in the playbooks as needed.
