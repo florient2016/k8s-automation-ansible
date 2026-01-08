@@ -1,71 +1,64 @@
-# Kubernetes Automation Ansible
-
-This repository contains automation scripts for deploying Kubernetes manifests and managing persistent volumes using Ansible.
+# Kubernetes NGINX Deployment with Ansible
 
 ## Overview
+This playbook deploys an NGINX webserver with a custom web page via Kubernetes NodePort service using Ansible.
 
-The project includes playbooks that facilitate the deployment of Kubernetes resources and the management of persistent storage.
+## Prerequisites
+- Kubernetes cluster running
+- `kubernetes.core` Ansible collection installed
+- `kubectl` configured
+- Local Kubernetes context set to target cluster
 
-## Playbook: Deploy Kubernetes Manifest
+## What Gets Deployed
 
-The `deploy-manifest.yaml` playbook is designed to apply Kubernetes manifests using Ansible. Below is a brief overview of its structure:
+### 1. Namespace
+- **Name:** `aap-deploy`
+- Isolates all resources for this deployment
 
-```yaml
-# playbooks/deploy-manifest.yml
-- name: Deploy Kubernetes manifest
-  hosts: localhost
-  gather_facts: false
+### 2. ConfigMap
+- **Name:** `nginx-index`
+- Contains a responsive HTML5 webinar landing page (French)
+- Custom CSS with modern dark theme styling
 
-  vars:
-    manifest_path: "manifests/app.yaml"   # override in Template if you want
+### 3. Deployment
+- **Name:** `nginx`
+- **Replicas:** 2
+- **Image:** `nginx:1.25`
+- Mounts custom index.html from ConfigMap
 
-  tasks:
-    - name: Apply manifest (kubectl apply equivalent)
-      kubernetes.core.k8s:
-        state: present
-        src: "{{ manifest_path }}"
-```
+### 4. Service
+- **Type:** NodePort
+- **Port:** 80 (internal)
+- **NodePort:** 30080
+- Exposes NGINX externally
 
-### Variables
-- `manifest_path`: Path to the Kubernetes manifest file to be applied.
-
-## Persistent Volume Configuration
-
-The `aap.yaml` file defines a Persistent Volume (PV) for use in Kubernetes. Here is the configuration:
-
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: aap-pv
-spec:
-  accessModes:
-    - ReadWriteMany
-  capacity:
-    storage: 100Gi
-  persistentVolumeReclaimPolicy: Retain
-  nfs:
-    path: /shares/registry
-    server: 10.10.0.2
-```
-
-### Specifications
-- **Access Modes**: ReadWriteMany
-- **Storage Capacity**: 100Gi
-- **Reclaim Policy**: Retain
-- **NFS Server**: 10.10.0.2
-- **NFS Path**: /shares/registry
-
-## Usage
-
-To deploy the Kubernetes manifest, run the following command:
+## Running the Playbook
 
 ```bash
-ansible-playbook playbooks/deploy-manifest.yml
+ansible-playbook main.yml
 ```
 
-Ensure that your Kubernetes cluster is accessible and that the necessary permissions are granted for the deployment.
+## Access the Webinar Page
 
-## Conclusion
+**Local access via port-forward:**
+```bash
+kubectl -n aap-deploy port-forward svc/nginx 8080:80
+```
+Then visit: `http://localhost:8080`
 
-This repository provides a streamlined approach to managing Kubernetes resources and persistent storage using Ansible. For further customization, modify the variables in the playbooks as needed.
+**Direct NodePort access:**
+```
+http://<node-ip>:30080
+```
+
+## Webinar Details
+- **Title:** Gouverner l'automatisation à grande échelle
+- **Date:** January 8, 2026
+- **Time:** 21:00 (Paris)
+- **Duration:** ~60 min + Q&A
+- **Format:** Online Live
+
+## Notes
+- Update the registration link in HTML (`Je m'inscris` button)
+- Replace `miniature.jpeg` with your actual webinar image
+- Adjust replicas and nodePort as needed
