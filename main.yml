@@ -394,7 +394,7 @@
                 
                       <!-- HERO IMAGE (miniature.jpeg) -->
                       <div class="hero-right" aria-label="Visuel du webinaire">
-                        <img src="miniature.jpeg" alt="Miniature du webinaire TeachMeMore" />
+  
                         <div class="overlay"></div>
                         <div class="stamp">
                           <b>Accès gratuit</b> <span>• Inscription requise</span>
@@ -424,12 +424,12 @@
                     </section>
                 
                     <section class="panel" style="margin-top:14px;">
-                      <h2>Agenda (exemple)</h2>
+                      <h2>Agenda du webinaire</h2>
                       <ul>
-                        <li>5 min — contexte : pourquoi l’automatisation ralentit quand elle se disperse</li>
-                        <li>20 min — principes : standardisation, réutilisation, séparation des responsabilités</li>
-                        <li>20 min — opération : exécution contrôlée, visibilité, gestion des accès, audit</li>
-                        <li>15 min — questions/réponses</li>
+                        <li>— contexte : pourquoi l’automatisation ralentit quand elle se disperse</li>
+                        <li>— principes : standardisation, réutilisation, séparation des responsabilités</li>
+                        <li>— opération : exécution contrôlée, visibilité, gestion des accès, audit</li>
+                        <li>— questions/réponses</li>
                       </ul>
                     </section>
                 
