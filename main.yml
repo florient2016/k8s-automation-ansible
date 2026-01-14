@@ -1,5 +1,5 @@
 ---
-- name: Deploy NGINX webinar page via NodePort
+- name: Deploy Application using NGINX page and expose via NodePort
   hosts: localhost
   gather_facts: false
   vars:
