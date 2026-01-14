@@ -10,12 +10,6 @@
         state: present
         definition:
 
-          # 1) Namespace
-          - apiVersion: v1
-            kind: Namespace
-            metadata:
-              name: "{{ namespace }}"
-
           # 2) ConfigMap – custom NGINX web page
           - apiVersion: v1
             kind: ConfigMap
